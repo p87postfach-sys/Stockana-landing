@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Stockana - Portfolio Cards for modern investors.</title>
+<meta name="description" content="Stockana turns your portfolio into visual cards. Track entries, PnL, rarity and holding time in a premium experience for modern investors." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://stockana.com/" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+<meta property="og:title" content="Stockana - Portfolio Cards for modern investors." />
+<meta property="og:description" content="Stockana turns your portfolio into visual cards. Track entries, PnL, rarity and holding time in a premium experience for modern investors." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://stockana.com/" />
+<meta property="og:image" content="https://stockana.com/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Stockana - Portfolio Cards for modern investors." />
+<meta name="twitter:description" content="Stockana turns your portfolio into visual cards. Track entries, PnL, rarity and holding time in a premium experience for modern investors." />
+<meta name="twitter:image" content="https://stockana.com/og-image.jpg" />
+<style>
+  :root {
+    --gold: #d8ad4e;
+    --gold2: #ffe7a2;
+    --cream: #fff5d3;
+    --soft: rgba(255,245,211,.62);
+    --green: #3fe678;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #000;
+    color: var(--cream);
+    overflow: hidden;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% -18%, rgba(216,173,78,.22), transparent 34%),
+      radial-gradient(circle at 80% 18%, rgba(255,231,162,.045), transparent 28%),
+      linear-gradient(180deg, #000 0%, #030302 48%, #000 100%);
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .12;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,.64) 0 1px, transparent 1.5px),
+      radial-gradient(circle, rgba(216,173,78,.7) 0 1px, transparent 1.5px);
+    background-size: 330px 330px, 540px 540px;
+    background-position: 44px 54px, 190px 230px;
+  }
+
+  /* INTRO: original logo only, full-screen clickable */
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: #000;
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+    transition: opacity .72s ease, visibility .72s ease;
+  }
+
+  .intro.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .intro-aura {
+    display: none;
+  }
+
+  .intro-logo-box {
+    position: relative;
+    z-index: 2;
+    width: min(78vw, 620px);
+    min-width: 285px;
+    opacity: 0;
+    transform: translate3d(0, 62px, 0) scale(.54);
+    transform-origin: center center;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    animation: logoEnter 3.65s cubic-bezier(.18,.72,.20,1) .12s forwards;
+  }
+
+  .intro-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border: 0;
+    border-radius: 0;
+    filter: none;
+    transform: translate3d(0,0,0);
+    backface-visibility: hidden;
+  }
+
+  .start-hint {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    bottom: max(28px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    white-space: nowrap;
+    color: rgba(255,245,211,.76);
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: .36em;
+    text-transform: uppercase;
+  }
+
+  .intro.clicked .intro-logo-box {
+    animation: logoForward 2.25s cubic-bezier(.16,.72,.18,1) forwards;
+  }
+  .intro.clicked .intro-aura {
+    display: none;
+  }
+  .intro.clicked .start-hint { opacity: 0; transition: opacity .14s ease; }
+
+  @keyframes auraPulse {
+    0%,100% { transform: scale(.88) rotate(0deg); opacity:.72; }
+    50% { transform: scale(1.05) rotate(16deg); opacity:1; }
+  }
+  @keyframes logoEnter {
+    from { opacity: 0; transform: translate3d(0, 62px, 0) scale(.54); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1.28); }
+  }
+  @keyframes logoFlight {
+    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1.28); }
+    to { opacity: 0; transform: translate3d(0, -38px, 0) scale(2.52); }
+  }
+
+  @keyframes logoForward {
+    from { opacity: 1; transform: translate3d(0, 0, 0) scale(1.28); }
+    to { opacity: 0; transform: translate3d(0, -38px, 0) scale(2.52); }
+  }
+  @keyframes auraFlight {
+    0% { opacity: .92; transform: scale(1); }
+    100% { opacity: 0; transform: scale(3.1); }
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity .82s ease, transform .82s ease;
+  }
+
+  .page.live {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .landing {
+    min-height: 100svh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px clamp(14px, 3vw, 44px) 24px;
+  }
+
+  .closed {
+    position: fixed;
+    top: 30px;
+    right: clamp(18px, 3.5vw, 58px);
+    z-index: 9;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,245,211,.76);
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 18px rgba(63,230,120,.82);
+  }
+
+  /* Continuous cinema header, high on the screen. No mini image/logo. */
+  .cinema {
+    position: relative;
+    width: 100vw;
+    height: clamp(380px, 59svh, 650px);
+    margin-top: -20px;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent 0, #000 2.5%, #000 97.5%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 2.5%, #000 97.5%, transparent 100%);
+  }
+
+  .cinema::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, #000 0%, rgba(0,0,0,.06) 8%, transparent 25%, transparent 66%, rgba(0,0,0,.66) 90%, #000 100%),
+      linear-gradient(90deg, #000 0%, transparent 10%, transparent 90%, #000 100%);
+  }
+
+  .card-track {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    width: max-content;
+    will-change: transform;
+    animation: marquee 64s linear infinite;
+    transform: translate3d(0,0,0);
+  }
+
+  .card-group {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(18px, 2.2vw, 38px);
+    padding-right: clamp(18px, 2.2vw, 38px);
+  }
+
+  .stock-card {
+    height: clamp(450px, 69svh, 760px);
+    width: auto;
+    border-radius: clamp(18px, 1.7vw, 30px);
+    opacity: .95;
+    transform: translateZ(0);
+    filter:
+      brightness(.86)
+      contrast(1.08)
+      saturate(.96)
+      drop-shadow(0 42px 72px rgba(0,0,0,.9))
+      drop-shadow(0 0 16px rgba(216,173,78,.10));
+    backface-visibility: hidden;
+  }
+
+  @keyframes marquee {
+    from { transform: translate3d(0,0,0); }
+    to { transform: translate3d(-33.333333%,0,0); }
+  }
+
+  .content {
+    position: relative;
+    z-index: 5;
+    width: min(100%, 930px);
+    margin-top: -88px;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .micro {
+    color: rgba(255,228,154,.72);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: .52em;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 900px;
+    font-family: "Optima", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    font-size: clamp(34px, 4.4vw, 68px);
+    line-height: 1.02;
+    letter-spacing: .015em;
+    color: #fff6d5;
+    text-transform: uppercase;
+    text-shadow: 0 0 24px rgba(216,173,78,.10);
+  }
+
+  .copy {
+    margin: 0;
+    max-width: 660px;
+    color: rgba(255,245,211,.58);
+    font-size: clamp(14px, 1.08vw, 16px);
+    line-height: 1.62;
+    letter-spacing: .045em;
+  }
+
+  .copy strong {
+    color: #ffe89c;
+    font-weight: 720;
+  }
+
+  .fine-line {
+    width: min(430px, 72vw);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,231,162,.56), transparent);
+    opacity: .7;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  .btn {
+    min-width: min(76vw, 240px);
+    min-height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    border-radius: 999px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: .18em;
+    font-size: 12px;
+    font-weight: 950;
+    transition: transform .18s ease, filter .18s ease;
+  }
+
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .btn:active { transform: translateY(1px) scale(.99); }
+
+  .btn-main {
+    color: #090703;
+    background: linear-gradient(135deg, #fff5bf 0%, #d7a02e 50%, #7a4e10 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.74), 0 18px 48px rgba(215,160,46,.22);
+  }
+
+  .btn-ghost {
+    color: #ffecc4;
+    border: 1px solid rgba(216,173,78,.42);
+    background: rgba(255,239,190,.022);
+  }
+
+  .legal {
+    margin: 0;
+    max-width: 600px;
+    color: rgba(255,245,211,.30);
+    font-size: 10px;
+    line-height: 1.42;
+  }
+
+  @media (max-width: 860px) {
+    html, body { overflow-y: auto; }
+    .landing {
+      min-height: 100svh;
+      padding: 12px 14px 22px;
+    }
+
+    .closed {
+      top: 17px;
+      right: 14px;
+      font-size: 9px;
+      gap: 7px;
+      letter-spacing: .20em;
+    }
+
+    .cinema {
+      height: 50svh;
+      min-height: 360px;
+      margin-top: -10px;
+      mask-image: linear-gradient(90deg, transparent 0, #000 1%, #000 99%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1%, #000 99%, transparent 100%);
+    }
+
+    .card-group {
+      gap: 12px;
+      padding-right: 12px;
+    }
+
+    .stock-card {
+      height: min(525px, 66svh);
+      border-radius: 19px;
+    }
+
+    .content {
+      margin-top: -56px;
+      gap: 10px;
+    }
+
+    .micro {
+      font-size: 9px;
+      letter-spacing: .30em;
+    }
+
+    h1 {
+      font-size: clamp(30px, 9.6vw, 48px);
+      max-width: 94vw;
+      line-height: 1.08;
+      letter-spacing: .02em;
+    }
+
+    .copy {
+      max-width: 94vw;
+      font-size: 14.5px;
+      line-height: 1.45;
+    }
+
+    .actions {
+      width: 100%;
+      gap: 9px;
+    }
+
+    .btn {
+      width: 100%;
+      min-width: 0;
+      min-height: 52px;
+      font-size: 11px;
+    }
+
+    .intro-logo-box {
+      width: min(88vw, 440px);
+      min-width: 270px;
+    }
+
+    .start-hint {
+      width: calc(100vw - 28px);
+      white-space: normal;
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: .22em;
+    }
+  }
+
+  @media (max-height: 760px) and (min-width: 861px) {
+    .landing { padding-top: 8px; padding-bottom: 16px; }
+    .cinema {
+      height: 60vh;
+      margin-top: -28px;
+    }
+    .stock-card { height: 72vh; }
+    .content {
+      margin-top: -118px;
+      gap: 8px;
+    }
+    h1 { font-size: clamp(38px, 4.9vw, 70px); }
+    .copy { font-size: 14.5px; }
+    .btn { min-height: 49px; }
+    .legal { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-track, .intro-aura, .intro-logo-box {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+    }
+    .btn { transition: none; }
+  }
+    .legal-footer {
+    position: fixed;
+    right: 18px;
+    bottom: 14px;
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,245,211,.50);
+    pointer-events: auto;
+  }
+
+  .legal-footer a {
+    color: rgba(255,245,211,.58);
+    text-decoration: none;
+  }
+
+  .legal-footer a:hover {
+    color: rgba(255,231,162,.95);
+  }
+</style>
+</head>
+<body>
+  <main id="page" class="page" aria-hidden="true">
+    <section class="landing">
+      <div class="closed"><span class="dot"></span> Closed Beta</div>
+
+      <section class="cinema" aria-label="Stockana Karten Header">
+        <div class="card-track">
+          <div class="card-group"><img class="stock-card" loading="eager" decoding="async" src="stockana-card-mercedes.png" alt="Stockana mercedes">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-nvda.png" alt="Stockana nvda">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-ferrari.png" alt="Stockana ferrari">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-rhm.png" alt="Stockana rhm">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-mcd.png" alt="Stockana mcd">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-well.png" alt="Stockana well">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-lha.png" alt="Stockana lha"></div>
+<div class="card-group"><img class="stock-card" loading="eager" decoding="async" src="stockana-card-mercedes.png" alt="Stockana mercedes">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-nvda.png" alt="Stockana nvda">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-ferrari.png" alt="Stockana ferrari">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-rhm.png" alt="Stockana rhm">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-mcd.png" alt="Stockana mcd">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-well.png" alt="Stockana well">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-lha.png" alt="Stockana lha"></div>
+<div class="card-group"><img class="stock-card" loading="eager" decoding="async" src="stockana-card-mercedes.png" alt="Stockana mercedes">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-nvda.png" alt="Stockana nvda">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-ferrari.png" alt="Stockana ferrari">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-rhm.png" alt="Stockana rhm">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-mcd.png" alt="Stockana mcd">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-well.png" alt="Stockana well">
+<img class="stock-card" loading="eager" decoding="async" src="stockana-card-lha.png" alt="Stockana lha"></div>
+        </div>
+      </section>
+
+      <section class="content">
+        <div class="micro">Investment Cards Â· Portfolio Identity</div>
+        <h1>Portfolio Cards<br>for modern investors.</h1>
+        <p class="copy">
+          Stockana verwandelt Investments in <strong>visuelle Karten</strong> mit PnL, Haltedauer, Rarity und BesitzgefÃ¼hl.
+        </p>
+        <div class="fine-line"></div>
+        <nav class="actions" aria-label="Stockana Aktionen">
+          <a class="btn btn-main" href="https://stockana-app.onrender.com">Zur Beta-Version</a>
+          <a class="btn btn-ghost" href="mailto:patrick.streit@stockana.com?subject=Stockana%20Beta%20Anfrage">Anfrage senden</a>
+        </nav>
+        <p class="legal">Kein Broker. Keine Anlageberatung. Visuelles Portfolio-Tracking, Paper-Trades und Investment identity.</p>
+      </section>
+    </section>
+  </main>
+
+  <button id="intro" class="intro" type="button" aria-label="Stockana starten">
+    <div class="intro-aura"></div>
+    <div class="intro-logo-box">
+      <img class="intro-logo" loading="eager" decoding="sync" src="stockana-logo.jpg" alt="Stockana Logo">
+    </div>
+    <div class="start-hint">Klick / Tap zum Start</div>
+  </button>
+
+<script>
+(function () {
+  const intro = document.getElementById('intro');
+  const page = document.getElementById('page');
+  let started = false;
+
+  function startExperience(event) {
+    if (event) event.preventDefault();
+    if (started) return;
+    started = true;
+
+    intro.classList.add('clicked');
+
+    window.setTimeout(() => {
+      page.classList.add('live');
+      page.setAttribute('aria-hidden', 'false');
+    }, 410);
+
+    window.setTimeout(() => {
+      intro.classList.add('hidden');
+      intro.setAttribute('aria-hidden', 'true');
+    }, 900);
+  }
+
+  intro.addEventListener('click', startExperience);
+  intro.addEventListener('pointerdown', startExperience);
+  intro.addEventListener('touchstart', startExperience, { passive: false });
+  window.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' || event.key === ' ') startExperience(event);
+  });
+})();
+</script>
+  <footer class="legal-footer">
+    <a href="impressum.html">Impressum</a>
+    <span>·</span>
+    <a href="datenschutz.html">Datenschutz</a>
+  </footer>
+</body>
+</html>
+
