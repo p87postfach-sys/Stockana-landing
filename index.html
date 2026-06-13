@@ -330,6 +330,7 @@
   .actions {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 0;
@@ -354,6 +355,14 @@
   .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
   .btn:active { transform: translateY(1px) scale(.99); }
 
+  .beta-action-stack {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 8px;
+  }
+
   .btn-main {
     color: #090703;
     background: linear-gradient(135deg, #fff5bf 0%, #d7a02e 50%, #7a4e10 100%);
@@ -364,6 +373,17 @@
     color: #ffecc4;
     border: 1px solid rgba(216,173,78,.42);
     background: rgba(255,239,190,.022);
+  }
+
+  .beta-temp-notice {
+    margin: 0;
+    max-width: 245px;
+    color: rgba(255,245,211,.46);
+    font-size: 10.5px;
+    font-weight: 650;
+    letter-spacing: .055em;
+    line-height: 1.45;
+    text-align: center;
   }
 
   .legal {
@@ -433,6 +453,10 @@
     .actions {
       width: 100%;
       gap: 9px;
+    }
+
+    .beta-action-stack {
+      width: 100%;
     }
 
     .btn {
@@ -544,7 +568,15 @@
         </p>
         <div class="fine-line"></div>
         <nav class="actions" aria-label="Stockana Aktionen">
-          <a class="btn btn-main" href="https://stockana-app.onrender.com">Zur Beta-Version</a>
+          <div class="beta-action-stack">
+            <a class="btn btn-main" href="https://stockana-app.onrender.com">Zur Beta-Version</a>
+            <!-- TEMP_LANDING_BETA_NOTICE_START -->
+            <p class="beta-temp-notice">
+              We are currently improving the Stockana app.<br>
+              Beta access will be back soon.
+            </p>
+            <!-- TEMP_LANDING_BETA_NOTICE_END -->
+          </div>
           <a class="btn btn-ghost" href="mailto:patrick.streit@stockana.com?subject=Stockana%20Beta%20Anfrage">Anfrage senden</a>
         </nav>
         <p class="legal">Kein Broker. Keine Anlageberatung. Visuelles Portfolio-Tracking, Paper-Trades und Investment identity.</p>
